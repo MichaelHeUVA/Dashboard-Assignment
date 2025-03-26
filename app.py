@@ -12,24 +12,20 @@ app = Flask(__name__)
 def index():
     chart_type = request.form.get("chart_type", "box")
 
-    # Generate random data
-    df = pd.DataFrame(
-        {
-            "Category": np.random.choice(["A", "B", "C", "D"], size=100),
-            "Value": np.random.randint(10, 100, size=100),
-            "Group": np.random.choice(["X", "Y"], size=100),
-        }
-    )
+    # Country, Year, Export_Tons, Export_Value_USD, Region
+    df = pd.read_csv("coffee_exports.csv")
 
     # Select chart type
     if chart_type == "bar":
-        fig = px.bar(df, x="Category", y="Value", color="Group", title="Bar Chart")
+        fig = px.bar(
+            df, x="Country", y="Export_Value_USD", color="Region", title="Bar Chart"
+        )
     elif chart_type == "scatter":
         fig = px.scatter(
-            df, x="Category", y="Value", color="Group", title="Scatter Plot"
+            df, x="Country", y="Export_Tons", color="Region", title="Scatter Plot"
         )
     else:
-        fig = px.box(df, x="Category", y="Value", color="Group", title="Box Plot")
+        fig = px.box(df, x="Region", y="Export_Tons", color="Country", title="Box Plot")
 
     # Dark layout
     fig.update_layout(
